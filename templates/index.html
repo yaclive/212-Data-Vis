@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>212 Data Vis</title>
+
+	<style>
+		* {
+			margin: 0;
+			padding: 0;
+		}
+
+		body {
+			overflow: hidden;
+		}
+
+		canvas {
+			display: block;
+		}
+	</style>
+</head>
+<body>
+	<canvas id="canvas"></canvas>
+
+	<script>
+		var canvas = document.getElementById("canvas"),
+			ctx = canvas.getContext("2d"),
+			win = {
+				width: 0,
+				height: 0
+			},
+			cursor = {
+				x: 0,
+				y: 0
+			};
+
+		function resize() {
+			win = {
+				width: window.innerWidth,
+				height: window.innerHeight
+			}
+			canvas.width  = win.width;
+			canvas.height = win.height;
+		}
+
+		function drawCircles() {
+			var width = win.width * 1,
+				height = win.height * 1;
+
+			var tiles = {
+				wide: 25,
+				high: 15,
+				size: 20
+			};
+			for (var i = 0; i < tiles.high; i++) {
+				for (var j = 0; j < tiles.wide; j++) {
+					ctx.beginPath();
+					ctx.arc(j * (width / tiles.size), i * (height / tiles.size), tiles.size, 0, 2 * Math.PI);
+					ctx.fill();
+				}
+			}
+		}
+		function loop() {
+			ctx.restore();
+			ctx.save();
+
+			ctx.clearRect(0, 0, win.width, win.height);
+
+			drawCircles();
+
+			requestAnimationFrame(loop);
+		}
+
+		window.addEventListener("resize", resize);
+		window.addEventListener("mousemove", function(event) {
+			cursor.x = event.pageX;
+			cursor.y = event.pageY;
+		});
+
+		resize();
+		loop();
+	</script>
+</body>
+</html>
