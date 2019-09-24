@@ -73,38 +73,21 @@
 			ctx.save();
 			ctx.translate(win.width / 2 - (tiles.wide * tiles.size * 2) / 2, win.height / 2 - (tiles.high * tiles.size * 2) / 2); // Calculate tile block size and center using window width and height
 			ctx.translate(tiles.size, tiles.size); // Offset circle to correct coordinates to be from top left
-			ctx.globalAlpha = 0.6;
+			ctx.globalAlpha = 0.7;
 
 			var count = 0;
 			for (var i = 0; i < tiles.high; i++) {
 				for (var j = 0; j < tiles.wide; j++) {
 					ctx.beginPath();
-					ctx.arc(j * tiles.size * 2, i * tiles.size * 2, tiles.size + Math.abs(data[time + count]["1"] % 60) / 2, 0, 2 * Math.PI);
+					ctx.arc(j * tiles.size * 2, i * tiles.size * 2, tiles.size + seedRandom(count) * 30, 0, 2 * Math.PI);
 
-					ctx.fillStyle = "hsl("+ (data[time + count]["2"]) +", "+ Math.abs(data[time + count]["3"] % 100) +"%, "+ (seedRandom(count) * 80 + 10) +"%)";
+					ctx.fillStyle = "hsl("+ (190 + seedRandom(count) * 100) +", "+ (seedRandom(count) * 100) +"%, "+ (seedRandom(count) * 80 + 10) +"%)";
 					ctx.fill();
 
 					count++;
 				}
 			}
 			ctx.restore();
-		}
-		function drawLines() {
-			ctx.save();
-			for (var j = 0; j < 10; j++) {
-				ctx.beginPath();
-				for (var i = 0; i < 10000; i+=40) {
-					ctx.lineTo(i * win.width / 10000, data[i][j] % 40);
-				}
-				ctx.stroke();
-				ctx.translate(0, win.height / 10);
-			}
-			ctx.restore();
-			
-			ctx.beginPath();
-			ctx.lineTo(time, 0);
-			ctx.lineTo(time, win.height);
-			ctx.stroke();
 		}
 		function loop() {
 			ctx.restore();
@@ -113,9 +96,8 @@
 			ctx.globalCompositeOperation = "overlay";
 
 			drawCircles();
-			drawLines();
 
-			time += 1;
+			time += 0.001;
 			requestAnimationFrame(loop);
 		}
 
