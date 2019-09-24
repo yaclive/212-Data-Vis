@@ -32,7 +32,8 @@
 			cursor = {
 				x: 0,
 				y: 0
-			};
+			},
+			time = 0;
 
 		function resize() {
 			win = {
@@ -42,32 +43,49 @@
 			canvas.width  = win.width;
 			canvas.height = win.height;
 		}
+		function seedRandom(seed) { // Mostly for testing, produces predictable randomness
+			var x = Math.sin(seed) * 10000;
+			return x - Math.floor(x);
+		}
 
 		function drawCircles() {
 			var width = win.width * 1,
 				height = win.height * 1;
 
 			var tiles = {
-				wide: 25,
-				high: 15,
-				size: 20
+				wide: 50,
+				high: 30,
+				size: 10
 			};
+
+			ctx.save();
+			ctx.translate(win.width / 2 - (tiles.wide * tiles.size * 2) / 2, win.height / 2 - (tiles.high * tiles.size * 2) / 2); // Calculate tile block size and center using window width and height
+			ctx.translate(tiles.size, tiles.size); // Offset circle to correct coordinates to be from top left
+			ctx.globalAlpha = 0.7;
+
+			var count = 0;
 			for (var i = 0; i < tiles.high; i++) {
 				for (var j = 0; j < tiles.wide; j++) {
 					ctx.beginPath();
-					ctx.arc(j * (width / tiles.size), i * (height / tiles.size), tiles.size, 0, 2 * Math.PI);
+					ctx.arc(j * tiles.size * 2, i * tiles.size * 2, tiles.size + seedRandom(count) * 30, 0, 2 * Math.PI);
+
+					ctx.fillStyle = "hsl("+ (190 + seedRandom(count) * 100) +", "+ (seedRandom(count) * 100) +"%, "+ (seedRandom(count) * 80 + 10) +"%)";
 					ctx.fill();
+
+					count++;
 				}
 			}
+			ctx.restore();
 		}
 		function loop() {
 			ctx.restore();
 			ctx.save();
-
 			ctx.clearRect(0, 0, win.width, win.height);
+			ctx.globalCompositeOperation = "overlay";
 
 			drawCircles();
 
+			time += 0.001;
 			requestAnimationFrame(loop);
 		}
 
