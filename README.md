@@ -22,3 +22,4 @@
 - Render signal lines at load time into svg
 - Only respond to left click
 - Add more datasets
+- Experiment with time scrubbing padding, time += (cursor.x - time) / 2
