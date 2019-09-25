@@ -13,7 +13,7 @@ var canvas = document.getElementById("canvas"),
 	data = {},
 	tiles = {
 		wide: 50,
-		high: 30,
+		high: 28,
 		size: 10
 	},
 	time = 0,
