@@ -20,3 +20,5 @@
 
 ## TO-DO / Improvements / Optimisations
 - Render signal lines at load time into svg
+- Only respond to left click
+- Add more datasets
