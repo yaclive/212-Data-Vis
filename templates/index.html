@@ -16,11 +16,45 @@
 
 		canvas {
 			display: block;
+			cursor: ew-resize;
 		}
 	</style>
 </head>
 <body>
 	<canvas id="canvas"></canvas>
+	<div class="ui">
+		<div class="sidebar">
+			<div class="header">
+				<h1>eeg breath counting</h1>
+				<h2>10,000 samples</h2>
+				<h2>78 signals</h2>
+			</div>
+			<div class="controls">
+				<div class="modes">
+					<div class="btn mode" id="mode1"></div>
+					<div class="btn mode" id="mode2"></div>
+					<div class="btn mode" id="mode3"></div>
+				</div>
+				<div class="datasets">
+					<select name="dataset">
+						<option value="eeg_data_a_x1">dataset a x1</option>
+						<option value="eeg_data_a_x5">dataset a x5</option>
+						<option value="eeg_data_a_x20">dataset a x20</option>
+					</select>
+				</div>
+				<div class="time">
+					<div class="btn timeElement" id="fastReverse"></div>
+					<div class="btn timeElement" id="reverse"></div>
+					<div class="timeElement" id="display">5.54923925</div>
+					<div class="btn timeElement" id="pause"></div>
+					<div class="btn timeElement" id="forward"></div>
+					<div class="btn timeElement" id="fastForward"></div>
+					<div class="progress"></div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<footer>Grandchamp R, Braboszcz C and Delorme A (2014) Oculometric variations during mind wandering. Front. Psychol. 5:31. doi: 10.3389/fpsyg.2014.00031</footer>
 
 	<script>
 		var canvas = document.getElementById("canvas"),
@@ -31,10 +65,18 @@
 			},
 			cursor = {
 				x: 0,
-				y: 0
+				y: 0,
+				down: false,
+				start: 0
 			},
 			data = {},
-			time = 0;
+			tiles = {
+				wide: 50,
+				high: 30,
+				size: 10
+			},
+			time = 0,
+			speed = 1;
 
 		// Get json eeg data
 		var getJSONreq = new XMLHttpRequest();
@@ -59,16 +101,13 @@
 			var x = Math.sin(seed) * 10000;
 			return x - Math.floor(x);
 		}
+		function map(input, sMin, sMax, tMin, tMax) {
+			return (input - sMin) * (tMax - tMin) / (sMax - sMin) + tMin;
+		}
 
 		function drawCircles() {
 			var width = win.width * 1,
 				height = win.height * 1;
-
-			var tiles = {
-				wide: 50,
-				high: 30,
-				size: 10
-			};
 
 			ctx.save();
 			ctx.translate(win.width / 2 - (tiles.wide * tiles.size * 2) / 2, win.height / 2 - (tiles.high * tiles.size * 2) / 2); // Calculate tile block size and center using window width and height
@@ -91,20 +130,25 @@
 		}
 		function drawLines() {
 			ctx.save();
+			ctx.globalAlpha = 0.6;
+			ctx.lineWidth = 1.4;
+
 			for (var j = 0; j < 10; j++) {
 				ctx.beginPath();
-				for (var i = 0; i < 10000; i+=40) {
-					ctx.lineTo(i * win.width / 10000, data[i][j] % 40);
+				for (var i = 0; i < win.width / 4; i++) {
+					ctx.lineTo(i * 4, data[i + time][j] % 80);
+					//ctx.moveTo(i * 4, data[i + time][j] % 80);
+					//ctx.quadraticCurveTo((i + 1) * 4, data[i + time + 1][j] % 80, (i + 2) * 4, data[i + time + 2][j] % 80); // Draw curve between every 1st and 3rd datapoint using 2nd as handle
 				}
 				ctx.stroke();
 				ctx.translate(0, win.height / 10);
 			}
 			ctx.restore();
-			
-			ctx.beginPath();
+
+/*			ctx.beginPath();
 			ctx.lineTo(time, 0);
 			ctx.lineTo(time, win.height);
-			ctx.stroke();
+			ctx.stroke();*/
 		}
 		function loop() {
 			ctx.restore();
@@ -112,10 +156,18 @@
 			ctx.clearRect(0, 0, win.width, win.height);
 			ctx.globalCompositeOperation = "overlay";
 
-			drawCircles();
-			drawLines();
+			// Manage time
+			if (cursor.down) {
+				time += (cursor.start - cursor.x);
+				cursor.start = cursor.x;
+			}
+			time += speed;
+			time %= 10000 - tiles.wide * tiles.high;
+			time = Math.max(time, 0);
 
-			time += 1;
+			drawCircles();
+			if (cursor.down) drawLines();
+
 			requestAnimationFrame(loop);
 		}
 
@@ -123,6 +175,16 @@
 		window.addEventListener("mousemove", function(event) {
 			cursor.x = event.pageX;
 			cursor.y = event.pageY;
+		});
+		window.addEventListener("mousedown", function(event) {
+			cursor.down = true;
+			cursor.start = cursor.x;
+
+			speed = 0;
+		});
+		window.addEventListener("mouseup", function(event) {
+			cursor.down = false;
+			speed = 1;
 		});
 
 		resize();

@@ -17,3 +17,6 @@
 - set FLASK_DEBUG=1
 
 - python -m flask run
+
+## TO-DO / Improvements / Optimisations
+- Render signal lines at load time into svg
