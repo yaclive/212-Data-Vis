@@ -26,6 +26,8 @@ canvas {
 	transform: translate(-50%, -50%);
 	padding: 20px;
 	cursor: ew-resize;
+
+	border: 8px solid black;
 }
 
 .sidebar {
@@ -51,7 +53,7 @@ h1 {
 	font-size: 1.6em;
 	background: black;
 	color: white;
-	padding: 0px 70px 0 10px;
+	padding: 0px 36px 0 10px;
 	margin: 0 0 10px;
 }
 h2 {

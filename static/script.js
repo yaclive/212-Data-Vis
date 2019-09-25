@@ -156,21 +156,38 @@ document.getElementById("selectDataset").addEventListener("change", function(eve
 });
 
 // Time manipulation
-document.getElementById("fastReverse").addEventListener("click", function(event) {
-	speed = -20;
-});
-document.getElementById("reverse").addEventListener("click", function(event) {
-	speed = -1;
-});
-document.getElementById("pause").addEventListener("click", function(event) {
-	speed = 0;
-});
-document.getElementById("forward").addEventListener("click", function(event) {
-	speed = 1;
-});
-document.getElementById("fastForward").addEventListener("click", function(event) {
-	speed = 20;
-});
+var timeButtons = document.getElementsByClassName("btn timeElement");
+for (var i = 0; i < timeButtons.length; i++) {
+    timeButtons[i].addEventListener("click", function(event) {
+		switch(event.target.id) {
+			case "fastReverse":
+				speed = -20;
+				break;
+			case "reverse":
+				speed = -1;
+				break;
+			case "pause":
+				speed = 0;
+				break;
+			case "forward":
+				speed = 1;
+				break;
+			case "fastForward":
+				speed = 20;
+				break;
+
+		}
+
+		if (event.target.id == "pause") {
+			document.getElementById("pause").style.display = "none";
+			document.getElementById("forward").style.display = "";
+		}
+		else {
+			document.getElementById("forward").style.display = "none";
+			document.getElementById("pause").style.display = "";
+		}
+	});
+}
 
 // Load default JSON dataset
 loadDataset("eeg_data_a_x1", loop);
