@@ -146,6 +146,13 @@ document.getElementById("sidebar").addEventListener("mousedown", function(event)
 var modeButtons = document.getElementsByClassName("mode");
 for (var i = 0; i < modeButtons.length; i++) {
     modeButtons[i].addEventListener("click", function(event) {
+    	// Remove active class from other buttons
+    	for (var j = 0; j < modeButtons.length; j++) {
+    		modeButtons[j].classList.remove("active");
+    	}
+    	// Add active class to button
+    	this.classList.add("active");
+
 		mode = Number(event.target.id.substring(4));
 	});
 }
@@ -159,6 +166,13 @@ document.getElementById("selectDataset").addEventListener("change", function(eve
 var timeButtons = document.getElementsByClassName("btn timeElement");
 for (var i = 0; i < timeButtons.length; i++) {
     timeButtons[i].addEventListener("click", function(event) {
+    	// Remove active class from other buttons
+    	for (var j = 0; j < timeButtons.length; j++) {
+    		timeButtons[j].classList.remove("active");
+    	}
+    	// Add active class to button
+    	this.classList.add("active");
+
 		switch(event.target.id) {
 			case "fastReverse":
 				speed = -20;

@@ -40,7 +40,7 @@ canvas {
 .btn {
 	cursor: pointer;
 }
-.btn:hover {
+.btn:hover, .active {
 	box-shadow: inset 0px 0px 0px 2px black, inset 0px 0px 0px 4px white;
 }
 
