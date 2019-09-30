@@ -19,7 +19,8 @@ var canvas = document.getElementById("canvas"),
 	time = 0,
 	speed = 1,
 	pause = 0,
-	mode = 1;
+	mode = 1,
+	blendmode = "overlay";
 
 function resize() {
 	win = {
@@ -57,7 +58,7 @@ function drawCircles() {
 	ctx.save();
 	ctx.translate(win.width / 2 - (tiles.wide * tiles.size * 2) / 2, win.height / 2 - (tiles.high * tiles.size * 2) / 2); // Calculate tile block size and center using window width and height
 	ctx.translate(tiles.size, tiles.size); // Offset circle to correct coordinates to be from top left
-	ctx.globalAlpha = 0.6;
+	ctx.globalAlpha = 0.7;
 
 	var count = 0;
 	for (var i = 0; i < tiles.high; i++) {
@@ -103,7 +104,7 @@ function loop() {
 	ctx.restore();
 	ctx.save();
 	ctx.clearRect(0, 0, win.width, win.height);
-	ctx.globalCompositeOperation = "overlay";
+	ctx.globalCompositeOperation = blendmode;
 
 	// Manage time
 	if (cursor.down) {
@@ -149,6 +150,11 @@ for (var i = 0; i < modeButtons.length; i++) {
 		mode = Number(event.target.id.substring(4));
 	});
 }
+
+// Blend mode
+document.getElementById("selectBlendMode").addEventListener("change", function(event) {
+	blendmode = this.value;
+});
 
 // Dataset
 document.getElementById("selectDataset").addEventListener("change", function(event) {

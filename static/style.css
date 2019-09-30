@@ -27,7 +27,8 @@ canvas {
 	padding: 20px;
 	cursor: ew-resize;
 
-	border: 8px solid black;
+	border: 10px solid black;
+	border-image: url(border.svg) 9 repeat;
 }
 
 .sidebar {
